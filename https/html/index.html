@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login-Formular</title>
+    <script src="https://cdn.jsdelivr.net/gh/pocketbase/js-sdk@master/dist/pocketbase.umd.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var pb = new PocketBase('http://127.0.0.1:8090');
+
+            window.sendLoginData = async function () {
+                try {
+                    var email = document.getElementById('username').value;
+                    var password = document.getElementById('password').value;
+                    const authData = await pb.admins.authWithPassword(email, password);
+                    console.log(pb.authStore.isValid);
+                    console.log(pb.authStore.token);
+                    console.log(pb.authStore.model.id);
+                    alert("Erfolgreich angemeldet! Token: " + pb.authStore.token);
+                } catch (error) {
+                    alert("Anmeldefehler: " + error);
+                }
+            }
+
+            window.logout = function () {
+                pb.authStore.clear();
+            }
+        });
+    </script>
+</head>
+<body>
+<h2>Login-Formular</h2>
+<label for="username">E-Mail:</label><br>
+<input type="text" id="username" name="username"><br>
+<label for="password">Passwort:</label><br>
+<input type="password" id="password" name="password"><br><br>
+<button onclick="sendLoginData()">Senden</button>
+<button onclick="logout()">Logout</button>
+</body>
+</html>
